@@ -52,12 +52,14 @@ export const AuthContextProvider: FC<IAuthContextProviderProps> = ({
           userData.password
         );
         await updateProfile(res.user, { displayName: userData.name });
+        navigate("/");
       } else {
         await signInWithEmailAndPassword(
           auth,
           userData.email,
           userData.password
         );
+        navigate("/");
       }
     } catch (error: any) {
       error.message && setError(error.message);
@@ -78,7 +80,6 @@ export const AuthContextProvider: FC<IAuthContextProviderProps> = ({
       } else {
         setIsUserLogined(false);
         setUser({} as User);
-        navigate("/auth");
       }
     });
     return () => {

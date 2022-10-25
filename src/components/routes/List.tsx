@@ -1,4 +1,5 @@
-import { Auth } from "../pages/auth/Auth";
+import { Login } from "../pages/auth/Login";
+import { Registration } from "../pages/auth/Registration";
 import { Friends } from "../pages/friends/Friends";
 import { Home } from "../pages/home/Home";
 import { Messages } from "../pages/messages/Messages";
@@ -6,12 +7,17 @@ import { Profile } from "../pages/profile/Profile";
 
 export const publicRoutes = [
   {
-    path: "/friends/:id",
-    component: <Home />,
+    path: "/profile/:id",
+    component: <Profile />,
+  },
+
+  {
+    path: "/login",
+    component: <Login />,
   },
   {
-    path: "/auth",
-    component: <Auth />,
+    path: "/reg",
+    component: <Registration />,
   },
 ];
 
