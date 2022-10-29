@@ -18,8 +18,9 @@ import {
   signInWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
-import { auth } from "../../firebase";
+import { auth, db } from "../../firebase";
 import { useNavigate } from "react-router-dom";
+import { doc, setDoc } from "firebase/firestore";
 
 const AuthContext = createContext<AuthContextProviderTypes>(
   {} as AuthContextProviderTypes
@@ -41,6 +42,48 @@ export const AuthContextProvider: FC<IAuthContextProviderProps> = ({
     name: "",
   } as UserData);
 
+  const addUser = async (newUser: User) => {
+    const {
+      uid,
+      displayName,
+      phoneNumber,
+      photoURL,
+      email,
+      emailVerified,
+      isAnonymous,
+      providerId,
+      metadata,
+    } = newUser;
+    try {
+      await setDoc(doc(db, "users", uid), {
+        uid,
+        displayName,
+        phoneNumber,
+        photoURL,
+        email,
+        emailVerified,
+        isAnonymous,
+        metadata: {
+          creationTime: newUser.metadata.creationTime,
+          lastSignInTime: newUser.metadata.lastSignInTime,
+        },
+        providerId,
+        subscribers: [],
+        subscribed: [],
+        dialogs: [],
+
+        age: null,
+        navigation: {
+          country: null,
+          city: null,
+        },
+        status: null,
+      });
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+  };
+
   const handleSubmit = async (e: SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -52,6 +95,7 @@ export const AuthContextProvider: FC<IAuthContextProviderProps> = ({
           userData.password
         );
         await updateProfile(res.user, { displayName: userData.name });
+        await addUser(res.user);
         navigate("/");
       } else {
         await signInWithEmailAndPassword(

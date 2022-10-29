@@ -17,9 +17,9 @@ export const Posts: FC = () => {
 
   useEffect(() => {
     const unsub = onSnapshot(collection(db, "posts"), (doc) => {
-      const fechedPosts = [] as IPost[];
-      doc.forEach((d: any) => fechedPosts.push(d.data()));
-      fechedPosts.sort((a, b) => a.addedTime.seconds - b.addedTime.seconds);
+      const fechedPosts = doc.docs.map((d) => d.data()) as IPost[];
+      // doc.forEach((d: any) => fechedPosts.push(d.data()));
+      fechedPosts.sort((a, b) => a?.addedTime?.seconds - b?.addedTime?.seconds);
 
       setPosts(fechedPosts.reverse());
     });
@@ -85,7 +85,9 @@ export const Posts: FC = () => {
           </Card>
         ))
       ) : (
-        <CircularProgress />
+        <Box sx={{ textAlign: "center" }}>
+          <CircularProgress size={60} />
+        </Box>
       )}
     </Box>
   );

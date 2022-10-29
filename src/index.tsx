@@ -4,6 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import { Layout } from "./components/layout/Layout";
 import { Root } from "./components/routes";
 import { AuthContextProvider } from "./contexts/auth/AuthContext";
+import { FriendsContextProvider } from "./contexts/friends/FriendsContext";
 import "./index.css";
 
 const root = ReactDOM.createRoot(
@@ -12,9 +13,11 @@ const root = ReactDOM.createRoot(
 root.render(
   <BrowserRouter>
     <AuthContextProvider>
-      <Layout>
-        <Root />
-      </Layout>
+      <FriendsContextProvider>
+        <Layout>
+          <Root />
+        </Layout>
+      </FriendsContextProvider>
     </AuthContextProvider>
   </BrowserRouter>
 );

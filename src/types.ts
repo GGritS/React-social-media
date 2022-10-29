@@ -1,3 +1,4 @@
+import { Timestamp } from "firebase/firestore";
 import { Dispatch, SetStateAction } from "react";
 
 export type TypeSetState<T> = Dispatch<SetStateAction<T>>;
@@ -12,5 +13,5 @@ export interface IPost {
   author: IUser;
   createdAt: string;
   content: string;
-  addedTime: { seconds: number; nanoseconds: number };
+  addedTime: Timestamp;
 }
