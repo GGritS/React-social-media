@@ -40,8 +40,10 @@ export const UserCard: FC<UserCardProps> = ({ userInfo }) => {
           <Box>{age ? age : "the user did not indicate his age"}</Box>
           <Box>
             {navigation.country
-              ? `${navigation.country}, ${navigation.city}`
-              : " the user did not specify his country"}
+              ? navigation.city
+                ? `${navigation.country} ${navigation.city}`
+                : `${navigation.country}`
+              : "the user did not specify his country"}
           </Box>
         </Box>
       </Link>
