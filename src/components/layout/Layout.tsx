@@ -1,6 +1,7 @@
 import { Grid } from "@mui/material";
 import React, { FC, ReactNode } from "react";
 import { useAuth } from "../../contexts/auth/AuthContext";
+
 import { Header } from "./hedaer/Header";
 import { Sidebar } from "./sidebar/Sidebar";
 
@@ -10,6 +11,7 @@ type LayoutProps = {
 
 export const Layout: FC<LayoutProps> = ({ children }) => {
   const { isUserLogined } = useAuth();
+
   return (
     <>
       <Header />

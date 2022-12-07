@@ -1,7 +1,10 @@
+import React, { FC } from "react";
+
 import { Avatar, Button } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { FC, useState } from "react";
 import { Link } from "react-router-dom";
+import { useFriends } from "../../../contexts/friends/FriendsContext";
+import { useStyles } from "./useStyles";
 import { RegisteredUser } from "../../../contexts/friends";
 
 type UserCardProps = {
@@ -9,20 +12,15 @@ type UserCardProps = {
 };
 
 export const UserCard: FC<UserCardProps> = ({ userInfo }) => {
-  const [isFollow, setIsFollow] = useState(false);
-  const { age, displayName, photoURL, navigation } = userInfo;
+  const styles = useStyles({ loading: true });
+
+  const { handleFollow, handleUnsubscribe, registeredCurrentUser } =
+    useFriends();
+
+  const { age, displayName, photoURL, navigation, uid, subscribers } = userInfo;
 
   return (
-    <Box
-      sx={{
-        margin: 2,
-        paddingX: "30px",
-        backgroundColor: "#F1F7FA",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-      }}
-    >
+    <Box className={styles.wrapper}>
       <Link
         to="/profile/uid"
         style={{
@@ -47,22 +45,22 @@ export const UserCard: FC<UserCardProps> = ({ userInfo }) => {
           </Box>
         </Box>
       </Link>
-      {!isFollow ? (
+      {registeredCurrentUser.subscribed.includes(uid) ? (
         <Button
           sx={{ background: "grey", width: "100px", height: "50%" }}
           variant="contained"
           onClick={() => {
-            setIsFollow(true);
+            handleUnsubscribe(uid, subscribers);
           }}
         >
-          Unfollow
+          Unsubscribe
         </Button>
       ) : (
         <Button
-          sx={{ background: "red", width: "100px", height: "50%" }}
+          sx={{ width: "100px", height: "50%" }}
           variant="contained"
           onClick={() => {
-            setIsFollow(false);
+            handleFollow(uid, subscribers);
           }}
         >
           Follow

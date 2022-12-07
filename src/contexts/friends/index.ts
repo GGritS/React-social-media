@@ -3,7 +3,10 @@ import { ReactNode } from "react";
 
 export type FriendsContextProviderTypes = {
   fetchUsers: () => void;
-  registeredUser?: RegisteredUser;
+  registeredCurrentUser: RegisteredUser;
+  users: RegisteredUser[];
+  handleFollow: (userId: string, userSubscribers: string[]) => void;
+  handleUnsubscribe: (userId: string, userSubscribers: string[]) => void;
 };
 
 export type FriendsContextProviderProps = {
@@ -13,6 +16,8 @@ export type FriendsContextProviderProps = {
 export type RegisteredUser = {
   uid: string;
   displayName: string;
+  age: number | null;
+  status: string | null;
   phoneNumber: string | null;
   photoURL: string | null;
   email: string | null;
@@ -20,12 +25,11 @@ export type RegisteredUser = {
   isAnonymous: string | null;
   metadata: UserMetadata;
   providerId: string | null;
-  friends: any;
-  dialogs: any;
-  age: number | null;
   navigation: {
     country: string | null;
     city: string | null;
   };
-  status: string | null;
+  subscribers: string[];
+  subscribed: string[];
+  dialogs: any;
 };

@@ -3,41 +3,12 @@ import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import React, { FC, useEffect, useState } from "react";
 import { useAuth } from "../../../contexts/auth/AuthContext";
 import { RegisteredUser } from "../../../contexts/friends";
+import { useFriends } from "../../../contexts/friends/FriendsContext";
 import { db } from "../../../firebase";
 import { UserCard } from "./UserCard";
 
 export const Friends: FC = () => {
-  const [users, setUsers] = useState<RegisteredUser[]>([] as RegisteredUser[]);
-  // const [regUser, setRegUser] = useState<RegisteredUser>();
-  const { user } = useAuth();
-
-  // const uppdateUserInfo = async () => {
-  //   const washingtonRef = doc(db, "users", user.uid);
-
-  //   await updateDoc(washingtonRef, {
-  //     ...regUser,
-  //     navigation: {
-  //       country: "Ukraine",
-  //       city: null,
-  //     },
-  //   } as RegisteredUser);
-  //   console.log("info was uppdated");
-  // };
-
-  const fetchUsers = () => {
-    const unsub = onSnapshot(collection(db, "users"), (doc) => {
-      doc.forEach((d) => console.log(d.data()));
-      const users = doc.docs.map((d: any) => d.data()) as RegisteredUser[];
-      const filteredUsers = users.filter((u) => user.uid !== u.uid);
-      // const indexOfCurrentRegUser = users.findIndex((u) => u.uid === user.uid);
-      setUsers(filteredUsers);
-      // setRegUser(users[indexOfCurrentRegUser]);
-    });
-
-    return () => {
-      unsub();
-    };
-  };
+  const { fetchUsers, users, registeredCurrentUser } = useFriends();
 
   useEffect(() => {
     fetchUsers();
@@ -59,7 +30,6 @@ export const Friends: FC = () => {
           <CircularProgress size={60} />
         </Box>
       )}
-      {}
     </Box>
   );
 };

@@ -1,9 +1,15 @@
 import { Box } from "@mui/system";
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import { useAuth } from "../../../contexts/auth/AuthContext";
+import { useFriends } from "../../../contexts/friends/FriendsContext";
 
 export const Profile: FC = () => {
   const { user } = useAuth();
+  const { registeredCurrentUser, fetchUsers } = useFriends();
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
   return (
     <Box>
       <Box>
@@ -18,6 +24,13 @@ export const Profile: FC = () => {
           />
         )}
       </Box>
+      {registeredCurrentUser.subscribed && (
+        <>
+          <Box>Followers: {registeredCurrentUser.subscribers.length}</Box>
+          <Box>Following: {registeredCurrentUser.subscribed.length}</Box>
+        </>
+      )}
+
       <Box>
         name: {user.displayName ? user.displayName : "user don`t have name"}
       </Box>
