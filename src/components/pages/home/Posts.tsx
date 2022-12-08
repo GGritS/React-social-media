@@ -36,7 +36,7 @@ export const Posts: FC = () => {
         padding: 1,
       }}
     >
-      {!!posts.length ? (
+      {posts.length ? (
         posts?.map((post, index) => (
           <Card key={index} sx={{ marginBottom: 1, paddingX: 2 }}>
             <Link
