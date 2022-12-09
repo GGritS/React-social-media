@@ -1,12 +1,5 @@
 import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
-import {
-  createContext,
-  FC,
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useState,
-} from "react";
+import { createContext, FC, useContext, useState } from "react";
 import {
   FriendsContextProviderTypes,
   FriendsContextProviderProps,

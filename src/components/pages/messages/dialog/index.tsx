@@ -1,11 +1,15 @@
 import { Button, CircularProgress } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { FC } from "react";
+import { useParams } from "react-router-dom";
 import { DialogHeader } from "./dialogHeader";
 import { Message } from "./message";
 
 export const Dialog: FC = () => {
   const messagesArray = [1, 2, 3];
+
+  // console.log(useParams());
+
   return (
     <>
       {messagesArray.length ? (

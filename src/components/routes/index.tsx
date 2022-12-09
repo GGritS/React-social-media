@@ -1,13 +1,11 @@
-import React, { FC, useEffect } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import React, { FC } from "react";
+import { Route, Routes } from "react-router-dom";
 import { useAuth } from "../../contexts/auth/AuthContext";
-import { useFriends } from "../../contexts/friends/FriendsContext";
 import { PageNotFound } from "../layout/page-not-found";
 import { privateRoutes, publicRoutes } from "./List";
 
 export const Root: FC = () => {
   const { isUserLogined } = useAuth();
-  const { fetchUsers } = useFriends();
 
   return (
     <div>
@@ -17,16 +15,14 @@ export const Root: FC = () => {
             <Route path={path} element={component} key={`Route-${path}`} />
           ))}
           <Route path="*" element={<PageNotFound />} />
-          {/* <Route path="*" element={<Navigate to="/pageNotFound" replace />} /> */}
-          {/* <Route path="/pageNotFound" element={<PageNotFound />} /> */}
         </Routes>
       ) : (
         <Routes>
           {publicRoutes.map(({ path, component }) => (
             <Route path={path} element={component} key={`Route-${path}`} />
           ))}
-          <Route path="*" element={<Navigate to="/pageNotFound" replace />} />
-          <Route path="/pageNotFound" element={<PageNotFound />} />
+          <Route path="*" element={<PageNotFound />} />
+          {/* <Route path="*" element={<Navigate to="/pageNotFound" replace />} /> */}
         </Routes>
       )}
     </div>

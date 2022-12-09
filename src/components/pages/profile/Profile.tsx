@@ -8,6 +8,7 @@ export const Profile: FC = () => {
   const { registeredCurrentUser, fetchUsers } = useFriends();
   useEffect(() => {
     fetchUsers();
+    // eslint-disable-next-line
   }, []);
 
   return (

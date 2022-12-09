@@ -2,6 +2,7 @@ import { Login } from "../pages/auth/Login";
 import { Registration } from "../pages/auth/Registration";
 import { Friends } from "../pages/friends/Friends";
 import { Home } from "../pages/home/Home";
+import { Dialog } from "../pages/messages/dialog";
 import { Messages } from "../pages/messages/Messages";
 import { Profile } from "../pages/profile/Profile";
 
@@ -35,8 +36,8 @@ export const privateRoutes = [
     component: <Messages />,
   },
   {
-    path: "/message/:id",
-    component: <Home />,
+    path: `/messages/:id`,
+    component: <Dialog />,
   },
   {
     path: "/friends",

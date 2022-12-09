@@ -31,5 +31,17 @@ export type RegisteredUser = {
   };
   subscribers: string[];
   subscribed: string[];
-  dialogs: any;
+  dialogs: UserDialogs[];
+};
+
+export type UserDialogs = {
+  companionId: string;
+  messages: DialogMessage[];
+};
+
+export type DialogMessage = {
+  messageId: string;
+  senderId: string;
+  message: string;
+  sendTime: string;
 };

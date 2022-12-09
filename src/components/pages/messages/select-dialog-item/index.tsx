@@ -4,10 +4,18 @@ import { Link } from "react-router-dom";
 
 import avatar from "./../../../../img/avatar.png";
 
-export const SelectDialogItem: FC = () => {
+type SelectDialogItemProps = {
+  name: string;
+  image: string | null;
+};
+
+export const SelectDialogItem: FC<SelectDialogItemProps> = ({
+  name,
+  image,
+}) => {
   return (
     <Link
-      to={`messages/${"uid"}`}
+      to={`aa`}
       style={{
         width: "100%",
         backgroundColor: "#F1F7FA",
@@ -16,7 +24,7 @@ export const SelectDialogItem: FC = () => {
         color: "black",
       }}
     >
-      <Grid container sx={{ width: "100%", height: "100%" }} xs={12}>
+      <Grid container sx={{ width: "100%", height: "100%" }}>
         <Grid
           item
           sx={{
@@ -35,7 +43,7 @@ export const SelectDialogItem: FC = () => {
               borderRadius: "50%",
             }}
             alt="."
-            src={avatar}
+            src={image ? image : avatar}
           />
         </Grid>
         <Grid
@@ -49,7 +57,7 @@ export const SelectDialogItem: FC = () => {
             justifyContent: "space-evenly",
           }}
         >
-          <Box>Name surname</Box>
+          <Box>{name}</Box>
           <Box>last message</Box>
         </Grid>
         <Grid item xs={1.5} sx={{ height: "100%", textAlign: "center" }}>

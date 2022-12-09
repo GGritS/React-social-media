@@ -1,10 +1,16 @@
 import { Box, CircularProgress } from "@mui/material";
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
+import { useFriends } from "../../../contexts/friends/FriendsContext";
 import { Dialog } from "./dialog";
 import { SelectDialogItem } from "./select-dialog-item";
 
 export const Messages: FC = () => {
-  const yourDialogs = [1, 2, 3];
+  const { registeredCurrentUser, fetchUsers, users } = useFriends();
+
+  useEffect(() => {
+    fetchUsers();
+    // eslint-disable-next-line
+  }, []);
   return (
     <Box
       sx={{
@@ -14,15 +20,12 @@ export const Messages: FC = () => {
         gap: "0.5rem",
       }}
     >
-      {yourDialogs.length ? (
-        // <Dialog />
-        <>
-          <SelectDialogItem />
-          <SelectDialogItem />
-          <SelectDialogItem />
-          <SelectDialogItem />
-        </>
+      {users.length ? (
+        users.map((user) => (
+          <SelectDialogItem name={user.displayName} image={user.photoURL} />
+        ))
       ) : (
+        // ))
         <Box sx={{ textAlign: "center" }}>
           <CircularProgress size={60} />
         </Box>
