@@ -3,7 +3,13 @@ import React, { FC } from "react";
 import { Box } from "@mui/system";
 import avatar from "./../../../../../img/avatar.png";
 
-export const DialogHeader: FC = () => {
+type DialogHeaderProps = {
+  name: string;
+  id: string;
+  image: string | null;
+};
+
+export const DialogHeader: FC<DialogHeaderProps> = ({ name, id, image }) => {
   return (
     <Box
       sx={{
@@ -24,9 +30,9 @@ export const DialogHeader: FC = () => {
           borderRadius: "50%",
         }}
         alt="avatar"
-        src={avatar}
+        src={image ? image : avatar}
       />
-      <Box sx={{ fontSize: "1.2rem" }}> Name Surname</Box>
+      <Box sx={{ fontSize: "1.2rem" }}> {name}</Box>
     </Box>
   );
 };

@@ -20,7 +20,7 @@ export const Message: FC<MessageProps> = ({ isMyMessage, children }) => {
       <Box
         sx={{
           borderRadius: "2rem",
-          paddingX: "0.7rem",
+          paddingX: "1rem",
           paddingY: "0.5rem",
           marginLeft: "0.5rem",
           maxWidth: "55%",
@@ -31,7 +31,15 @@ export const Message: FC<MessageProps> = ({ isMyMessage, children }) => {
         }}
       >
         <Box>{children}</Box>
-        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>6m ago</Box>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end",
+            marginTop: "0.3rem",
+          }}
+        >
+          6m ago
+        </Box>
       </Box>
     </Box>
   );

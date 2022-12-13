@@ -1,18 +1,181 @@
 import { Button, CircularProgress } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { FC } from "react";
+import React, { FC, useEffect, useLayoutEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useFriends } from "../../../../contexts/friends/FriendsContext";
 import { DialogHeader } from "./dialogHeader";
 import { Message } from "./message";
+import { DialogMessage, RegisteredUser } from "../../../../contexts/friends";
+import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
+import { db } from "../../../../firebase";
 
 export const Dialog: FC = () => {
-  const messagesArray = [1, 2, 3];
+  const [dialogCompanion, setDialogCompanion] = useState<RegisteredUser>(
+    {} as RegisteredUser
+  );
+  const [isIHaveDialog, setIsIHaveDialog] = useState<boolean>(false);
+  const [messages, setMessages] = useState<DialogMessage[] | null | []>(null);
 
-  // console.log(useParams());
+  const [message, setMessage] = useState<string>("");
+
+  const { id: uid } = useParams();
+
+  const { users, registeredCurrentUser, fetchUsers } = useFriends();
+
+  const findDialogUser = async () => {
+    const companion = users.filter((user) => user.uid === uid);
+
+    return setDialogCompanion(companion[0]);
+  };
+
+  const fetchMessages = async () => {
+    if (uid && !!registeredCurrentUser) {
+      // SET [] in dialogs
+
+      // await updateDoc(doc(db, "users", registeredCurrentUser.uid), {
+      //   dialogs: [],
+      // });
+
+      findDialogUser();
+      const usersIdInDialogs = registeredCurrentUser.dialogs.map(
+        (dialog) => dialog.companionId
+      );
+      const isIhaveDialogConst = usersIdInDialogs.includes(uid);
+      setIsIHaveDialog(usersIdInDialogs.includes(uid));
+      if (isIhaveDialogConst) {
+        const myDialogs = registeredCurrentUser.dialogs;
+        const currentDialogs = myDialogs.filter(
+          (dialog) => dialog.companionId === uid
+        );
+
+        setMessages(currentDialogs[0].messages);
+      } else setMessages([]);
+    }
+  };
+
+  const startDialogWithUser = async () => {
+    if (!registeredCurrentUser || !uid || !messages) return;
+
+    const updateUserDialogs = doc(db, "users", uid);
+    const updateMyDialogs = doc(db, "users", registeredCurrentUser.uid);
+    const myDialogs = registeredCurrentUser.dialogs.filter(
+      (dialog) => dialog.companionId !== uid
+    );
+    const userDialogs = dialogCompanion.dialogs.filter(
+      (dialog) => dialog.companionId !== registeredCurrentUser.uid
+    );
+
+    await updateDoc(updateUserDialogs, {
+      dialogs: [
+        ...userDialogs,
+        {
+          companionId: registeredCurrentUser.uid,
+          messages: [
+            {
+              messageId: "0",
+              message,
+              senderId: registeredCurrentUser.uid,
+              sendTime: "5m ago",
+            } as DialogMessage,
+          ],
+        },
+      ],
+    });
+    await updateDoc(updateMyDialogs, {
+      dialogs: [
+        ...myDialogs,
+        {
+          companionId: uid,
+          messages: [
+            {
+              messageId: "0",
+              message,
+              senderId: registeredCurrentUser.uid,
+              sendTime: "5m ago",
+            } as DialogMessage,
+          ],
+        },
+      ],
+    });
+  };
+
+  const continueDialogWithUser = async () => {
+    if (!registeredCurrentUser || !uid || !messages) return;
+    const updateUserDialogs = doc(db, "users", uid);
+    const updateMyDialogs = doc(db, "users", registeredCurrentUser.uid);
+
+    const usersIdInDialogs = registeredCurrentUser.dialogs.map(
+      (dialog) => dialog.companionId
+    );
+
+    const dialogCompanionIndex = usersIdInDialogs.indexOf(uid);
+
+    const myDialogs = registeredCurrentUser.dialogs.filter(
+      (dialog) => dialog.companionId !== uid
+    );
+    const userDialogs = dialogCompanion.dialogs.filter(
+      (dialog) => dialog.companionId !== registeredCurrentUser.uid
+    );
+
+    await updateDoc(updateUserDialogs, {
+      dialogs: [
+        ...userDialogs,
+        {
+          companionId: registeredCurrentUser.uid,
+          messages: [
+            ...messages,
+            {
+              messageId: messages.length + 1,
+              message,
+              senderId: registeredCurrentUser.uid,
+              sendTime: "5m ago",
+            },
+          ],
+        },
+      ],
+    });
+    await updateDoc(updateMyDialogs, {
+      dialogs: [
+        ...myDialogs,
+        {
+          companionId: usersIdInDialogs[dialogCompanionIndex],
+          messages: [
+            ...messages,
+            {
+              messageId: messages.length + 1,
+              message,
+              senderId: registeredCurrentUser.uid,
+              sendTime: "5m ago",
+            },
+          ],
+        },
+      ],
+    });
+  };
+
+  const handleSandMessage = () => {
+    if (message === "") return;
+    if (isIHaveDialog) continueDialogWithUser();
+    else startDialogWithUser();
+
+    setMessage("");
+  };
+
+  useLayoutEffect(() => {
+    fetchUsers();
+    //eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    findDialogUser();
+
+    fetchMessages();
+    //eslint-disable-next-line
+  }, [users]);
 
   return (
     <>
-      {messagesArray.length ? (
+      {dialogCompanion ? (
         <Box
           sx={{
             width: "100%",
@@ -23,7 +186,11 @@ export const Dialog: FC = () => {
             justifyContent: "space-between",
           }}
         >
-          <DialogHeader />
+          <DialogHeader
+            name={dialogCompanion.displayName}
+            id={dialogCompanion.uid}
+            image={dialogCompanion.photoURL}
+          />
 
           <Box
             sx={{
@@ -46,54 +213,21 @@ export const Dialog: FC = () => {
               }}
             >
               {/* Messages */}
-              <Message isMyMessage={false}>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum
-                maiores quisquam fuga iure ipsum inventore iste reiciendis
-                adipisci, nostrum rem veritatis esse ipsam recusandae doloribus
-                quas. Molestiae, quas molestias expedita consequuntur omnis
-                libero officiis nesciunt quam minus, fugit aperiam quod
-                architecto laboriosam obcaecati, facere inventore cupiditate
-                enim. Beatae corporis dolorum dignissimos officia officiis,
-                impedit tempora. Odio, aspernatur corrupti sunt tempore sequi
-                recusandae omnis quibusdam distinctio animi ipsam id debitis
-                voluptates perspiciatis quisquam quos incidunt minima nemo. Nam
-                amet dolorum minus quo repudiandae totam modi inventore neque
-                asperiores corrupti fugit reprehenderit, exercitationem tempora,
-                officiis illum repellat? A necessitatibus vero expedita saepe!
-              </Message>
-              <Message isMyMessage={false}>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum
-              </Message>
-              <Message isMyMessage={true}>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum
-                maiores quisquam fuga iure ipsum inventore iste reiciendis
-                adipisci, nostrum rem veritatis esse ipsam recusandae doloribus
-                quas. Molestiae, quas molestias expedita consequuntur omnis
-                libero officiis nesciunt quam minus, fugit aperiam quod
-                architecto laboriosam obcaecati, facere inventore cupiditate
-                enim. Beatae corporis dolorum dignissimos officia officiis,
-                impedit tempora. Odio, aspernatur corrupti sunt tempore sequi
-                recusandae omnis quibusdam distinctio animi ipsam id debitis
-                voluptates perspiciatis quisquam quos incidunt minima nemo. Nam
-                amet dolorum minus quo repudiandae totam modi inventore neque
-                asperiores corrupti fugit reprehenderit, exercitationem tempora,
-                officiis illum repellat? A necessitatibus vero expedita saepe!
-              </Message>
-              <Message isMyMessage={false}>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum
-                maiores quisquam fuga iure ipsum inventore iste reiciendis
-                adipisci, nostrum rem veritatis esse ipsam recusandae doloribus
-                quas. Molestiae, quas molestias expedita consequuntur omnis
-                libero officiis nesciunt quam minus, fugit aperiam quod
-                architecto laboriosam obcaecati, facere inventore cupiditate
-                enim. Beatae corporis dolorum dignissimos officia officiis,
-                impedit tempora. Odio, aspernatur corrupti sunt tempore sequi
-                recusandae omnis quibusdam distinctio animi ipsam id debitis
-                voluptates perspiciatis quisquam quos incidunt minima nemo. Nam
-                amet dolorum minus quo repudiandae totam modi inventore neque
-                asperiores corrupti fugit reprehenderit, exercitationem tempora,
-                officiis illum repellat? A necessitatibus vero expedita saepe!
-              </Message>
+              {messages && !!registeredCurrentUser ? (
+                messages.map((message, index) => (
+                  <Message
+                    key={`${message.messageId}_${index}`}
+                    isMyMessage={message.senderId === registeredCurrentUser.uid}
+                  >
+                    {message.message}
+                  </Message>
+                ))
+              ) : (
+                <Box sx={{ textAlign: "center" }}>
+                  <CircularProgress size={60} color="error" />
+                </Box>
+              )}
+
               {/* Messages */}
             </Box>
             <Box
@@ -106,11 +240,15 @@ export const Dialog: FC = () => {
               }}
             >
               <textarea
-                name=""
-                id=""
                 style={{ resize: "none", width: "70%", height: "100%" }}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
               ></textarea>
-              <Button variant="contained" sx={{ width: "25%", height: "100%" }}>
+              <Button
+                variant="contained"
+                sx={{ width: "25%", height: "100%" }}
+                onClick={() => handleSandMessage()}
+              >
                 Send
               </Button>
             </Box>
