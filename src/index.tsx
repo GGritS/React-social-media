@@ -5,6 +5,7 @@ import { Layout } from "./components/layout/Layout";
 import { Root } from "./components/routes";
 import { AuthContextProvider } from "./contexts/auth/AuthContext";
 import { FriendsContextProvider } from "./contexts/friends/FriendsContext";
+import { MessagesContextProvider } from "./contexts/messages/MessagesContext";
 import "./index.css";
 
 const root = ReactDOM.createRoot(
@@ -15,9 +16,11 @@ root.render(
   <BrowserRouter>
     <AuthContextProvider>
       <FriendsContextProvider>
-        <Layout>
-          <Root />
-        </Layout>
+        <MessagesContextProvider>
+          <Layout>
+            <Root />
+          </Layout>
+        </MessagesContextProvider>
       </FriendsContextProvider>
     </AuthContextProvider>
   </BrowserRouter>
