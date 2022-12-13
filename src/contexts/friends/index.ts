@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 
 export type FriendsContextProviderTypes = {
   fetchUsers: () => void;
-  registeredCurrentUser: RegisteredUser;
+  registeredCurrentUser: RegisteredUser | undefined;
   users: RegisteredUser[];
   handleFollow: (userId: string, userSubscribers: string[]) => void;
   handleUnsubscribe: (userId: string, userSubscribers: string[]) => void;

@@ -25,7 +25,7 @@ export const Profile: FC = () => {
           />
         )}
       </Box>
-      {registeredCurrentUser.subscribed && (
+      {registeredCurrentUser && (
         <>
           <Box>Followers: {registeredCurrentUser.subscribers.length}</Box>
           <Box>Following: {registeredCurrentUser.subscribed.length}</Box>

@@ -17,8 +17,9 @@ export const FriendsContextProvider: FC<FriendsContextProviderProps> = ({
 }) => {
   const { user: firebaseUser } = useAuth();
 
-  const [registeredCurrentUser, setRegisteredCurrentUser] =
-    useState<RegisteredUser>({} as RegisteredUser);
+  const [registeredCurrentUser, setRegisteredCurrentUser] = useState<
+    RegisteredUser | undefined
+  >(undefined);
   const [users, setUsers] = useState<RegisteredUser[]>([] as RegisteredUser[]);
 
   const fetchUsers = () => {
@@ -38,6 +39,7 @@ export const FriendsContextProvider: FC<FriendsContextProviderProps> = ({
   };
 
   const handleFollow = async (userId: string, userSubscribers: string[]) => {
+    if (!registeredCurrentUser) return;
     const updateUserSubscribers = doc(db, "users", userId);
     const updateMyFollows = doc(db, "users", registeredCurrentUser.uid);
     if (
@@ -59,6 +61,7 @@ export const FriendsContextProvider: FC<FriendsContextProviderProps> = ({
     userId: string,
     userSubscribers: string[]
   ) => {
+    if (!registeredCurrentUser) return;
     const updateUserSubscribers = doc(db, "users", userId);
     const updateMyFollows = doc(db, "users", registeredCurrentUser.uid);
 
@@ -88,6 +91,8 @@ export const FriendsContextProvider: FC<FriendsContextProviderProps> = ({
     <FriendsContext.Provider value={value}>{children}</FriendsContext.Provider>
   );
 };
+
+// TODO: name it useFriendsContext
 
 export const useFriends = () => {
   return useContext(FriendsContext);

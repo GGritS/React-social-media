@@ -1,21 +1,19 @@
 import { Box, Grid } from "@mui/material";
 import React, { FC } from "react";
 import { Link } from "react-router-dom";
+import { RegisteredUser } from "../../../../contexts/friends";
 
 import avatar from "./../../../../img/avatar.png";
 
 type SelectDialogItemProps = {
-  name: string;
-  image: string | null;
+  user: RegisteredUser;
 };
 
-export const SelectDialogItem: FC<SelectDialogItemProps> = ({
-  name,
-  image,
-}) => {
+export const SelectDialogItem: FC<SelectDialogItemProps> = ({ user }) => {
+  const { displayName: name, photoURL: image, uid } = user;
   return (
     <Link
-      to={`aa`}
+      to={uid}
       style={{
         width: "100%",
         backgroundColor: "#F1F7FA",

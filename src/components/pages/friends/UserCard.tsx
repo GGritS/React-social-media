@@ -8,16 +8,16 @@ import { useStyles } from "./useStyles";
 import { RegisteredUser } from "../../../contexts/friends";
 
 type UserCardProps = {
-  userInfo: RegisteredUser;
+  info: RegisteredUser;
+  followed: boolean;
 };
 
-export const UserCard: FC<UserCardProps> = ({ userInfo }) => {
+export const UserCard: FC<UserCardProps> = ({ info, followed }) => {
   const styles = useStyles({ loading: true });
 
-  const { handleFollow, handleUnsubscribe, registeredCurrentUser } =
-    useFriends();
+  const { handleFollow, handleUnsubscribe } = useFriends();
 
-  const { age, displayName, photoURL, navigation, uid, subscribers } = userInfo;
+  const { age, displayName, photoURL, navigation, uid, subscribers } = info;
 
   return (
     <Box className={styles.wrapper}>
@@ -47,7 +47,7 @@ export const UserCard: FC<UserCardProps> = ({ userInfo }) => {
           </Box>
         </Box>
       </Link>
-      {registeredCurrentUser.subscribed.includes(uid) ? (
+      {followed ? (
         <Button
           sx={{ background: "grey", width: "100px", height: "50%" }}
           variant="contained"

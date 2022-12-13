@@ -21,9 +21,7 @@ export const Messages: FC = () => {
       }}
     >
       {users.length ? (
-        users.map((user) => (
-          <SelectDialogItem name={user.displayName} image={user.photoURL} />
-        ))
+        users.map((user) => <SelectDialogItem user={user} key={user.uid} />)
       ) : (
         // ))
         <Box sx={{ textAlign: "center" }}>

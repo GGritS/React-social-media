@@ -16,6 +16,6 @@ export const MessagesContextProvider: FC<MessagesContextProviderProps> = ({
   );
 };
 
-export const useAuth = () => {
+export const useMessages = () => {
   return useContext(MessagesContext);
 };

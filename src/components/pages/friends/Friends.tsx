@@ -4,7 +4,7 @@ import { useFriends } from "../../../contexts/friends/FriendsContext";
 import { UserCard } from "./UserCard";
 
 export const Friends: FC = () => {
-  const { fetchUsers, users } = useFriends();
+  const { fetchUsers, users, registeredCurrentUser } = useFriends();
   useEffect(() => {
     fetchUsers();
     // eslint-disable-next-line
@@ -18,8 +18,14 @@ export const Friends: FC = () => {
         overflow: "auto",
       }}
     >
-      {users.length ? (
-        users.map((user) => <UserCard key={user.uid} userInfo={user} />)
+      {users.length && registeredCurrentUser ? (
+        users.map((user) => (
+          <UserCard
+            key={user.uid}
+            info={user}
+            followed={registeredCurrentUser.subscribed.includes(user.uid)}
+          />
+        ))
       ) : (
         <Box sx={{ textAlign: "center" }}>
           <CircularProgress size={60} />
