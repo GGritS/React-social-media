@@ -1,4 +1,5 @@
 import { Box, CircularProgress } from "@mui/material";
+import { serverTimestamp, Timestamp } from "firebase/firestore";
 import React, { FC, useEffect } from "react";
 import { useFriends } from "../../../contexts/friends/FriendsContext";
 import { Dialog } from "./dialog";
@@ -9,6 +10,9 @@ export const Messages: FC = () => {
 
   useEffect(() => {
     fetchUsers();
+
+    console.log("Timestamp", Timestamp.now());
+
     // eslint-disable-next-line
   }, []);
   return (

@@ -6,12 +6,11 @@ export type TypeSetState<T> = Dispatch<SetStateAction<T>>;
 export interface IUser {
   id: string;
   avatar: string | null;
-  name: string | null;
+  name: string;
 }
 
 export interface IPost {
   author: IUser;
-  createdAt: string;
   content: string;
   addedTime: Timestamp;
 }

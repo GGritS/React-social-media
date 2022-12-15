@@ -1,4 +1,5 @@
 import { UserMetadata } from "firebase/auth";
+import { Timestamp } from "firebase/firestore";
 import { ReactNode } from "react";
 
 export type FriendsContextProviderTypes = {
@@ -43,5 +44,5 @@ export type DialogMessage = {
   messageId: string;
   senderId: string;
   message: string;
-  sendTime: string;
+  sendTime: Timestamp;
 };

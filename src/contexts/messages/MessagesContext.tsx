@@ -1,4 +1,4 @@
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, Timestamp, updateDoc } from "firebase/firestore";
 import {
   createContext,
   FC,
@@ -62,6 +62,7 @@ export const MessagesContextProvider: FC<MessagesContextProviderProps> = ({
     const userDialogs = dialogCompanion.dialogs.filter(
       (dialog) => dialog.companionId !== registeredCurrentUser.uid
     );
+    const currentTime = await Timestamp.now();
 
     await updateDoc(updateUserDialogs, {
       dialogs: [
@@ -73,7 +74,7 @@ export const MessagesContextProvider: FC<MessagesContextProviderProps> = ({
               messageId: "0",
               message,
               senderId: registeredCurrentUser.uid,
-              sendTime: "5m ago",
+              sendTime: currentTime,
             } as DialogMessage,
           ],
         },
@@ -89,7 +90,7 @@ export const MessagesContextProvider: FC<MessagesContextProviderProps> = ({
               messageId: "0",
               message,
               senderId: registeredCurrentUser.uid,
-              sendTime: "5m ago",
+              sendTime: currentTime,
             } as DialogMessage,
           ],
         },
@@ -114,6 +115,8 @@ export const MessagesContextProvider: FC<MessagesContextProviderProps> = ({
       (dialog) => dialog.companionId !== registeredCurrentUser.uid
     );
 
+    const currentTime = await Timestamp.now();
+
     await updateDoc(updateUserDialogs, {
       dialogs: [
         ...userDialogs,
@@ -125,7 +128,7 @@ export const MessagesContextProvider: FC<MessagesContextProviderProps> = ({
               messageId: messages.length + 1,
               message,
               senderId: registeredCurrentUser.uid,
-              sendTime: "5m ago",
+              sendTime: currentTime,
             },
           ],
         },
@@ -142,7 +145,7 @@ export const MessagesContextProvider: FC<MessagesContextProviderProps> = ({
               messageId: messages.length + 1,
               message,
               senderId: registeredCurrentUser.uid,
-              sendTime: "5m ago",
+              sendTime: currentTime,
             },
           ],
         },
@@ -152,6 +155,7 @@ export const MessagesContextProvider: FC<MessagesContextProviderProps> = ({
 
   useLayoutEffect(() => {
     fetchUsers();
+    // eslint-disable-next-line
   }, []);
 
   const value: MessagesContextProviderTypes = {

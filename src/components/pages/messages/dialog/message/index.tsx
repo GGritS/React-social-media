@@ -1,12 +1,21 @@
 import { Box } from "@mui/material";
+import { Timestamp } from "firebase/firestore";
 import React, { FC, ReactNode } from "react";
+import { useGetTime } from "../../../../../hooks/time/useGetTime";
 
 type MessageProps = {
   isMyMessage: boolean;
   children: ReactNode;
+  sendedAt: Timestamp;
 };
 
-export const Message: FC<MessageProps> = ({ isMyMessage, children }) => {
+export const Message: FC<MessageProps> = ({
+  isMyMessage,
+  children,
+  sendedAt,
+}) => {
+  const sendedTime = useGetTime(sendedAt.seconds);
+
   return (
     <Box
       sx={{
@@ -38,7 +47,7 @@ export const Message: FC<MessageProps> = ({ isMyMessage, children }) => {
             marginTop: "0.3rem",
           }}
         >
-          6m ago
+          {sendedTime}
         </Box>
       </Box>
     </Box>

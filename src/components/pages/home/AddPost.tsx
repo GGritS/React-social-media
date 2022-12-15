@@ -1,5 +1,5 @@
 import { TextField } from "@mui/material";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { addDoc, collection, Timestamp } from "firebase/firestore";
 import React, { FC, KeyboardEvent, useState } from "react";
 import { useAuth } from "../../../contexts/auth/AuthContext";
 import { db } from "../../../firebase";
@@ -19,8 +19,7 @@ export const AddPost: FC = () => {
             name: user.displayName,
           },
           content,
-          createdAt: "5m ago",
-          addedTime: serverTimestamp(),
+          addedTime: await Timestamp.now(),
         });
       } catch (e) {
         console.error("Error adding document: ", e);

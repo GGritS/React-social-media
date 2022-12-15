@@ -1,6 +1,6 @@
 import { Button, CircularProgress } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { FC, useEffect, useLayoutEffect, useState } from "react";
+import { FC, useEffect, useLayoutEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useFriends } from "../../../../contexts/friends/FriendsContext";
 import { DialogHeader } from "./dialogHeader";
@@ -39,6 +39,7 @@ export const Dialog: FC = () => {
     if (uid === undefined) return;
     findDialogUser(uid);
     fetchMessages(uid);
+
     //eslint-disable-next-line
   }, [users]);
 
@@ -87,6 +88,7 @@ export const Dialog: FC = () => {
                   <Message
                     key={`${message.messageId}_${index}`}
                     isMyMessage={message.senderId === registeredCurrentUser.uid}
+                    sendedAt={message.sendTime}
                   >
                     {message.message}
                   </Message>
