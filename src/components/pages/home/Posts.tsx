@@ -13,7 +13,6 @@ export const Posts: FC = () => {
     const unsub = onSnapshot(collection(db, "posts"), (doc) => {
       const fechedPosts = doc.docs.map((d) => d.data()) as IPost[];
       fechedPosts.sort((a, b) => a?.addedTime?.seconds - b?.addedTime?.seconds);
-      console.log(fechedPosts);
 
       setPosts(fechedPosts.reverse());
     });

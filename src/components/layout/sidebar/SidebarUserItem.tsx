@@ -10,7 +10,7 @@ export const SidebarUserItem: FC = () => {
   return (
     <Box sx={{ backgroundColor: "#F1F7FA" }}>
       <Link
-        to="/profile"
+        to={`/profile/${user.uid}`}
         style={{
           display: "flex",
           alignItems: "center",

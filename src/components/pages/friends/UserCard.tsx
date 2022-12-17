@@ -9,10 +9,15 @@ import { RegisteredUser } from "../../../contexts/friends";
 
 type UserCardProps = {
   info: RegisteredUser;
+  currentUser: RegisteredUser;
   followed: boolean;
 };
 
-export const UserCard: FC<UserCardProps> = ({ info, followed }) => {
+export const UserCard: FC<UserCardProps> = ({
+  info,
+  followed,
+  currentUser,
+}) => {
   const styles = useStyles({ loading: true });
 
   const { handleFollow, handleUnsubscribe } = useFriends();
@@ -22,7 +27,7 @@ export const UserCard: FC<UserCardProps> = ({ info, followed }) => {
   return (
     <Box className={styles.wrapper}>
       <Link
-        to="/profile/uid"
+        to={`/profile/${info.uid}`}
         style={{
           color: "black",
           textDecoration: "none",
@@ -32,7 +37,11 @@ export const UserCard: FC<UserCardProps> = ({ info, followed }) => {
       >
         <Avatar
           alt="avatar"
-          src={photoURL ? photoURL : ""}
+          src={
+            photoURL
+              ? photoURL
+              : "https://cdn-icons-png.flaticon.com/512/149/149071.png"
+          }
           sx={{ margin: 1, width: "70px", height: "70px" }}
         />
         <Box sx={{ marginLeft: 2 }}>
@@ -52,7 +61,7 @@ export const UserCard: FC<UserCardProps> = ({ info, followed }) => {
           sx={{ background: "grey", width: "100px", height: "50%" }}
           variant="contained"
           onClick={() => {
-            handleUnsubscribe(uid, subscribers);
+            handleUnsubscribe(uid, subscribers, currentUser);
           }}
         >
           Unsubscribe
@@ -62,7 +71,7 @@ export const UserCard: FC<UserCardProps> = ({ info, followed }) => {
           sx={{ width: "100px", height: "50%" }}
           variant="contained"
           onClick={() => {
-            handleFollow(uid, subscribers);
+            handleFollow(uid, subscribers, currentUser);
           }}
         >
           Follow

@@ -5,30 +5,39 @@ import { ReactNode } from "react";
 export type FriendsContextProviderTypes = {
   fetchUsers: () => void;
   registeredCurrentUser: RegisteredUser | undefined;
-  users: RegisteredUser[];
-  handleFollow: (userId: string, userSubscribers: string[]) => void;
-  handleUnsubscribe: (userId: string, userSubscribers: string[]) => void;
+  handleFollow: (
+    userId: string,
+    userSubscribers: string[],
+    currentUser: RegisteredUser
+  ) => void;
+  handleUnsubscribe: (
+    userId: string,
+    userSubscribers: string[],
+    currentUser: RegisteredUser
+  ) => void;
 };
 
 export type FriendsContextProviderProps = {
   children: ReactNode;
 };
 
+type Nullable<T> = T | null;
+
 export type RegisteredUser = {
   uid: string;
   displayName: string;
-  age: number | null;
-  status: string | null;
-  phoneNumber: string | null;
-  photoURL: string | null;
-  email: string | null;
+  age: Nullable<number>;
+  status: Nullable<string>;
+  phoneNumber: Nullable<string>;
+  photoURL: Nullable<string>;
+  email: Nullable<string>;
   emailVerified: boolean;
-  isAnonymous: string | null;
+  isAnonymous: Nullable<string>;
   metadata: UserMetadata;
-  providerId: string | null;
+  providerId: Nullable<string>;
   navigation: {
-    country: string | null;
-    city: string | null;
+    country: Nullable<string>;
+    city: Nullable<string>;
   };
   subscribers: string[];
   subscribed: string[];

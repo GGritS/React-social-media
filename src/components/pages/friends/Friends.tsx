@@ -1,14 +1,10 @@
 import { Box, CircularProgress } from "@mui/material";
-import React, { FC, useEffect } from "react";
-import { useFriends } from "../../../contexts/friends/FriendsContext";
+import React, { FC } from "react";
+import { useUserContext } from "../../../contexts/user";
 import { UserCard } from "./UserCard";
 
 export const Friends: FC = () => {
-  const { fetchUsers, users, registeredCurrentUser } = useFriends();
-  useEffect(() => {
-    fetchUsers();
-    // eslint-disable-next-line
-  }, []);
+  const { users, user: currentUser } = useUserContext();
 
   return (
     <Box
@@ -18,12 +14,13 @@ export const Friends: FC = () => {
         overflow: "auto",
       }}
     >
-      {users.length && registeredCurrentUser ? (
+      {users.length && currentUser ? (
         users.map((user) => (
           <UserCard
             key={user.uid}
             info={user}
-            followed={registeredCurrentUser.subscribed.includes(user.uid)}
+            followed={currentUser.subscribed.includes(user.uid)}
+            currentUser={currentUser}
           />
         ))
       ) : (

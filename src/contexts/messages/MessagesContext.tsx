@@ -1,15 +1,9 @@
 import { doc, Timestamp, updateDoc } from "firebase/firestore";
-import {
-  createContext,
-  FC,
-  useContext,
-  useLayoutEffect,
-  useState,
-} from "react";
+import { createContext, FC, useContext, useState } from "react";
 import { MessagesContextProviderProps, MessagesContextProviderTypes } from ".";
 import { db } from "../../firebase";
 import { DialogMessage, RegisteredUser } from "../friends";
-import { useFriends } from "../friends/FriendsContext";
+import { useUserContext } from "../user";
 
 const MessagesContext = createContext<MessagesContextProviderTypes>(
   {} as MessagesContextProviderTypes
@@ -18,7 +12,7 @@ const MessagesContext = createContext<MessagesContextProviderTypes>(
 export const MessagesContextProvider: FC<MessagesContextProviderProps> = ({
   children,
 }) => {
-  const { users, registeredCurrentUser, fetchUsers } = useFriends();
+  const { users, user: currentUser } = useUserContext();
 
   const [dialogCompanion, setDialogCompanion] = useState<RegisteredUser>(
     {} as RegisteredUser
@@ -33,15 +27,15 @@ export const MessagesContextProvider: FC<MessagesContextProviderProps> = ({
   }
 
   const fetchMessages = async (uid: string) => {
-    if (uid && !!registeredCurrentUser) {
+    if (uid && !!currentUser) {
       // findDialogUser(uid);
-      const usersIdInDialogs = registeredCurrentUser.dialogs.map(
+      const usersIdInDialogs = currentUser.dialogs.map(
         (dialog) => dialog.companionId
       );
       const isIhaveDialogConst = usersIdInDialogs.includes(uid);
       setIsIHaveDialog(usersIdInDialogs.includes(uid));
       if (isIhaveDialogConst) {
-        const myDialogs = registeredCurrentUser.dialogs;
+        const myDialogs = currentUser.dialogs;
         const currentDialogs = myDialogs.filter(
           (dialog) => dialog.companionId === uid
         );
@@ -52,15 +46,15 @@ export const MessagesContextProvider: FC<MessagesContextProviderProps> = ({
   };
 
   const startDialogWithUser = async (uid: string, message: string) => {
-    if (!registeredCurrentUser || !uid || !messages) return;
+    if (!currentUser || !uid || !messages) return;
 
     const updateUserDialogs = doc(db, "users", uid);
-    const updateMyDialogs = doc(db, "users", registeredCurrentUser.uid);
-    const myDialogs = registeredCurrentUser.dialogs.filter(
+    const updateMyDialogs = doc(db, "users", currentUser.uid);
+    const myDialogs = currentUser.dialogs.filter(
       (dialog) => dialog.companionId !== uid
     );
     const userDialogs = dialogCompanion.dialogs.filter(
-      (dialog) => dialog.companionId !== registeredCurrentUser.uid
+      (dialog) => dialog.companionId !== currentUser.uid
     );
     const currentTime = await Timestamp.now();
 
@@ -68,12 +62,12 @@ export const MessagesContextProvider: FC<MessagesContextProviderProps> = ({
       dialogs: [
         ...userDialogs,
         {
-          companionId: registeredCurrentUser.uid,
+          companionId: currentUser.uid,
           messages: [
             {
               messageId: "0",
               message,
-              senderId: registeredCurrentUser.uid,
+              senderId: currentUser.uid,
               sendTime: currentTime,
             } as DialogMessage,
           ],
@@ -89,7 +83,7 @@ export const MessagesContextProvider: FC<MessagesContextProviderProps> = ({
             {
               messageId: "0",
               message,
-              senderId: registeredCurrentUser.uid,
+              senderId: currentUser.uid,
               sendTime: currentTime,
             } as DialogMessage,
           ],
@@ -98,21 +92,21 @@ export const MessagesContextProvider: FC<MessagesContextProviderProps> = ({
     });
   };
   const continueDialogWithUser = async (uid: string, message: string) => {
-    if (!registeredCurrentUser || !uid || !messages) return;
+    if (!currentUser || !uid || !messages) return;
     const updateUserDialogs = doc(db, "users", uid);
-    const updateMyDialogs = doc(db, "users", registeredCurrentUser.uid);
+    const updateMyDialogs = doc(db, "users", currentUser.uid);
 
-    const usersIdInDialogs = registeredCurrentUser.dialogs.map(
+    const usersIdInDialogs = currentUser.dialogs.map(
       (dialog) => dialog.companionId
     );
 
     const dialogCompanionIndex = usersIdInDialogs.indexOf(uid);
 
-    const myDialogs = registeredCurrentUser.dialogs.filter(
+    const myDialogs = currentUser.dialogs.filter(
       (dialog) => dialog.companionId !== uid
     );
     const userDialogs = dialogCompanion.dialogs.filter(
-      (dialog) => dialog.companionId !== registeredCurrentUser.uid
+      (dialog) => dialog.companionId !== currentUser.uid
     );
 
     const currentTime = await Timestamp.now();
@@ -121,13 +115,13 @@ export const MessagesContextProvider: FC<MessagesContextProviderProps> = ({
       dialogs: [
         ...userDialogs,
         {
-          companionId: registeredCurrentUser.uid,
+          companionId: currentUser.uid,
           messages: [
             ...messages,
             {
               messageId: messages.length + 1,
               message,
-              senderId: registeredCurrentUser.uid,
+              senderId: currentUser.uid,
               sendTime: currentTime,
             },
           ],
@@ -144,7 +138,7 @@ export const MessagesContextProvider: FC<MessagesContextProviderProps> = ({
             {
               messageId: messages.length + 1,
               message,
-              senderId: registeredCurrentUser.uid,
+              senderId: currentUser.uid,
               sendTime: currentTime,
             },
           ],
@@ -153,10 +147,10 @@ export const MessagesContextProvider: FC<MessagesContextProviderProps> = ({
     });
   };
 
-  useLayoutEffect(() => {
-    fetchUsers();
-    // eslint-disable-next-line
-  }, []);
+  // useLayoutEffect(() => {
+  // fetchUsers();
+  // eslint-disable-next-line
+  // }, []);
 
   const value: MessagesContextProviderTypes = {
     continueDialogWithUser,

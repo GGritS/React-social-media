@@ -1,17 +1,17 @@
 import { Button, CircularProgress } from "@mui/material";
 import { Box } from "@mui/system";
-import { FC, useEffect, useLayoutEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useFriends } from "../../../../contexts/friends/FriendsContext";
 import { DialogHeader } from "./dialogHeader";
 import { Message } from "./message";
 import { useMessages } from "../../../../contexts/messages/MessagesContext";
+import { useUserContext } from "../../../../contexts/user";
 
 export const Dialog: FC = () => {
   const [message, setMessage] = useState<string>("");
   const { id: uid } = useParams();
 
-  const { users, registeredCurrentUser, fetchUsers } = useFriends();
+  const { user: currentUser } = useUserContext();
   const {
     continueDialogWithUser,
     dialogCompanion,
@@ -21,6 +21,7 @@ export const Dialog: FC = () => {
     isIHaveDialog,
     messages,
   } = useMessages();
+  const { users } = useUserContext();
 
   const handleSandMessage = () => {
     if (message === "" || !uid) return;
@@ -29,11 +30,6 @@ export const Dialog: FC = () => {
 
     setMessage("");
   };
-
-  useLayoutEffect(() => {
-    fetchUsers();
-    //eslint-disable-next-line
-  }, []);
 
   useEffect(() => {
     if (uid === undefined) return;
@@ -83,11 +79,11 @@ export const Dialog: FC = () => {
               }}
             >
               {/* Messages */}
-              {messages && !!registeredCurrentUser ? (
+              {messages && !!currentUser ? (
                 messages.map((message, index) => (
                   <Message
                     key={`${message.messageId}_${index}`}
-                    isMyMessage={message.senderId === registeredCurrentUser.uid}
+                    isMyMessage={message.senderId === currentUser.uid}
                     sendedAt={message.sendTime}
                   >
                     {message.message}

@@ -5,6 +5,7 @@ import { Home } from "../pages/home/Home";
 import { Dialog } from "../pages/messages/dialog";
 import { Messages } from "../pages/messages/Messages";
 import { Profile } from "../pages/profile/Profile";
+import { Settings } from "../pages/settings";
 
 export const publicRoutes = [
   {
@@ -29,7 +30,7 @@ export const privateRoutes = [
   },
   {
     path: "/profile/:id",
-    component: <Home />,
+    component: <Profile />,
   },
   {
     path: "/messages",
@@ -46,5 +47,9 @@ export const privateRoutes = [
   {
     path: "/",
     component: <Home />,
+  },
+  {
+    path: "/Settings",
+    component: <Settings />,
   },
 ];
