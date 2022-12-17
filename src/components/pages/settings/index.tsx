@@ -83,7 +83,7 @@ export const Settings: FC = () => {
                 age: accountInfo.age,
                 status: accountInfo.status,
                 country: e.target.value,
-                city: accountInfo.country,
+                city: accountInfo.city,
               });
             }}
           />

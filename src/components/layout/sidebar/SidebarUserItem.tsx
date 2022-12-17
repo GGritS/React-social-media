@@ -27,11 +27,7 @@ export const SidebarUserItem: FC = () => {
             height: 46,
           }}
         >
-          <Avatar
-            src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-            alt="avatar"
-            sx={{ width: 46, height: 46 }}
-          />
+          <Avatar alt="avatar" sx={{ width: 46, height: 46 }} />
           <Box
             sx={{
               backgroundColor: "#4FB14F",
