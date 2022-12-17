@@ -3,8 +3,6 @@ import React, { FC } from "react";
 import { Link } from "react-router-dom";
 import { RegisteredUser } from "../../../../contexts/friends";
 
-import avatar from "./../../../../img/avatar.png";
-
 type SelectDialogItemProps = {
   user: RegisteredUser;
 };
@@ -41,7 +39,11 @@ export const SelectDialogItem: FC<SelectDialogItemProps> = ({ user }) => {
               borderRadius: "50%",
             }}
             alt="."
-            src={image ? image : avatar}
+            src={
+              image
+                ? image
+                : "https://cdn-icons-png.flaticon.com/512/149/149071.png"
+            }
           />
         </Grid>
         <Grid

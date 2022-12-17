@@ -1,20 +1,11 @@
 import { Box, CircularProgress } from "@mui/material";
-import { serverTimestamp, Timestamp } from "firebase/firestore";
-import React, { FC, useEffect } from "react";
-import { useFriends } from "../../../contexts/friends/FriendsContext";
-import { Dialog } from "./dialog";
+import React, { FC } from "react";
+import { useUserContext } from "../../../contexts/user";
 import { SelectDialogItem } from "./select-dialog-item";
 
 export const Messages: FC = () => {
-  const { registeredCurrentUser, fetchUsers, users } = useFriends();
+  const { users } = useUserContext();
 
-  useEffect(() => {
-    fetchUsers();
-
-    console.log("Timestamp", Timestamp.now());
-
-    // eslint-disable-next-line
-  }, []);
   return (
     <Box
       sx={{
@@ -27,7 +18,6 @@ export const Messages: FC = () => {
       {users.length ? (
         users.map((user) => <SelectDialogItem user={user} key={user.uid} />)
       ) : (
-        // ))
         <Box sx={{ textAlign: "center" }}>
           <CircularProgress size={60} />
         </Box>

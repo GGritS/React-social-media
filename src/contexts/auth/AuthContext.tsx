@@ -52,7 +52,6 @@ export const AuthContextProvider: FC<IAuthContextProviderProps> = ({
       emailVerified,
       isAnonymous,
       providerId,
-      metadata,
     } = newUser;
     try {
       await setDoc(doc(db, "users", uid), {

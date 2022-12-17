@@ -2,12 +2,13 @@ import ForumIcon from "@mui/icons-material/Forum";
 import GroupIcon from "@mui/icons-material/Group";
 import HomeIcon from "@mui/icons-material/Home";
 import ArticleIcon from "@mui/icons-material/Article";
+import SettingsIcon from "@mui/icons-material/Settings";
 
 export const menu = [
   {
     pk: 0,
     title: "My page",
-    link: "/profile",
+    link: "/profile/",
     icon: <HomeIcon />,
   },
   {
@@ -27,5 +28,11 @@ export const menu = [
     title: "Friends",
     link: "/friends",
     icon: <GroupIcon />,
+  },
+  {
+    pk: 4,
+    title: "Settings",
+    link: "/Settings",
+    icon: <SettingsIcon />,
   },
 ];
